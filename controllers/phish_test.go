@@ -172,8 +172,8 @@ func TestOpenedPhishingEmail(t *testing.T) {
 	if lastEvent.Message != models.EventOpened {
 		t.Fatalf("unexpected event status received. expected %s got %s", lastEvent.Message, models.EventOpened)
 	}
-	if result.ModifiedDate != lastEvent.Time {
-		t.Fatalf("unexpected result modified date received. expected %s got %s", lastEvent.Time, result.ModifiedDate)
+	if *result.ModifiedDate != lastEvent.Time {
+		t.Fatalf("unexpected result modified date received. expected %s got %s", lastEvent.Time, *result.ModifiedDate)
 	}
 }
 
@@ -198,8 +198,8 @@ func TestReportedPhishingEmail(t *testing.T) {
 	if lastEvent.Message != models.EventReported {
 		t.Fatalf("unexpected event status received. expected %s got %s", lastEvent.Message, models.EventReported)
 	}
-	if result.ModifiedDate != lastEvent.Time {
-		t.Fatalf("unexpected result modified date received. expected %s got %s", lastEvent.Time, result.ModifiedDate)
+	if *result.ModifiedDate != lastEvent.Time {
+		t.Fatalf("unexpected result modified date received. expected %s got %s", lastEvent.Time, *result.ModifiedDate)
 	}
 }
 
@@ -224,8 +224,8 @@ func TestClickedPhishingLinkAfterOpen(t *testing.T) {
 	if lastEvent.Message != models.EventClicked {
 		t.Fatalf("unexpected event status received. expected %s got %s", lastEvent.Message, models.EventClicked)
 	}
-	if result.ModifiedDate != lastEvent.Time {
-		t.Fatalf("unexpected result modified date received. expected %s got %s", lastEvent.Time, result.ModifiedDate)
+	if *result.ModifiedDate != lastEvent.Time {
+		t.Fatalf("unexpected result modified date received. expected %s got %s", lastEvent.Time, *result.ModifiedDate)
 	}
 }
 

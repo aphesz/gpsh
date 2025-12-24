@@ -14,7 +14,7 @@ func (s *ModelsSuite) TestGenerateSendDate(c *check.C) {
 	// is used.
 	err := PostCampaign(&campaign, campaign.UserId)
 	c.Assert(err, check.Equals, nil)
-	c.Assert(campaign.LaunchDate, check.Equals, campaign.CreatedDate)
+	c.Assert(*campaign.LaunchDate, check.Equals, campaign.CreatedDate)
 
 	// For comparing the dates, we need to fetch the campaign again. This is
 	// to solve an issue where the campaign object right now has time down to
@@ -24,13 +24,14 @@ func (s *ModelsSuite) TestGenerateSendDate(c *check.C) {
 	ms, err := GetMailLogsByCampaign(campaign.Id)
 	c.Assert(err, check.Equals, nil)
 	for _, m := range ms {
-		c.Assert(m.SendDate, check.Equals, campaign.CreatedDate)
+		c.Assert(*m.SendDate, check.Equals, campaign.CreatedDate)
 	}
 
 	// Test that if no send date is provided, all the emails are sent at the
 	// campaign's launch date
 	campaign = s.createCampaignDependencies(c)
-	campaign.LaunchDate = time.Now().UTC()
+	now := time.Now().UTC()
+	campaign.LaunchDate = &now
 	err = PostCampaign(&campaign, campaign.UserId)
 	c.Assert(err, check.Equals, nil)
 
@@ -39,14 +40,16 @@ func (s *ModelsSuite) TestGenerateSendDate(c *check.C) {
 	ms, err = GetMailLogsByCampaign(campaign.Id)
 	c.Assert(err, check.Equals, nil)
 	for _, m := range ms {
-		c.Assert(m.SendDate, check.Equals, campaign.LaunchDate)
+		c.Assert(*m.SendDate, check.Equals, *campaign.LaunchDate)
 	}
 
 	// Finally, test that if a send date is provided, the emails are staggered
 	// correctly.
 	campaign = s.createCampaignDependencies(c)
-	campaign.LaunchDate = time.Now().UTC()
-	campaign.SendByDate = campaign.LaunchDate.Add(2 * time.Minute)
+	now = time.Now().UTC()
+	campaign.LaunchDate = &now
+	sendByDate := campaign.LaunchDate.Add(2 * time.Minute)
+	campaign.SendByDate = &sendByDate
 	err = PostCampaign(&campaign, campaign.UserId)
 	c.Assert(err, check.Equals, nil)
 
@@ -58,7 +61,7 @@ func (s *ModelsSuite) TestGenerateSendDate(c *check.C) {
 	for i, m := range ms {
 		expectedOffset := int(sendingOffset * float64(i))
 		expectedDate := campaign.LaunchDate.Add(time.Duration(expectedOffset) * time.Minute)
-		c.Assert(m.SendDate, check.Equals, expectedDate)
+		c.Assert(*m.SendDate, check.Equals, expectedDate)
 	}
 }
 
@@ -71,22 +74,27 @@ func (s *ModelsSuite) TestCampaignDateValidation(c *check.C) {
 
 	// If the launch date is specified, then the send date is optional
 	campaign = s.createCampaignDependencies(c)
-	campaign.LaunchDate = time.Now().UTC()
+	now := time.Now().UTC()
+	campaign.LaunchDate = &now
 	err = campaign.Validate()
 	c.Assert(err, check.Equals, nil)
 
 	// If the send date is greater than the launch date, then there's no
 	//problem
 	campaign = s.createCampaignDependencies(c)
-	campaign.LaunchDate = time.Now().UTC()
-	campaign.SendByDate = campaign.LaunchDate.Add(1 * time.Minute)
+	now = time.Now().UTC()
+	campaign.LaunchDate = &now
+	sendByDate := campaign.LaunchDate.Add(1 * time.Minute)
+	campaign.SendByDate = &sendByDate
 	err = campaign.Validate()
 	c.Assert(err, check.Equals, nil)
 
 	// If the send date is less than the launch date, then there's an issue
 	campaign = s.createCampaignDependencies(c)
-	campaign.LaunchDate = time.Now().UTC()
-	campaign.SendByDate = campaign.LaunchDate.Add(-1 * time.Minute)
+	now = time.Now().UTC()
+	campaign.LaunchDate = &now
+	sendByDate = campaign.LaunchDate.Add(-1 * time.Minute)
+	campaign.SendByDate = &sendByDate
 	err = campaign.Validate()
 	c.Assert(err, check.Equals, ErrInvalidSendByDate)
 }
@@ -107,7 +115,8 @@ func (s *ModelsSuite) TestLaunchCampaignMaillogStatus(c *check.C) {
 	// maillogs so that they can be picked up by the background worker.
 	campaign = s.createCampaignDependencies(c)
 	campaign.Name = "New Campaign"
-	campaign.LaunchDate = time.Now().Add(1 * time.Hour)
+	launchDate := time.Now().Add(1 * time.Hour)
+	campaign.LaunchDate = &launchDate
 	c.Assert(PostCampaign(&campaign, campaign.UserId), check.Equals, nil)
 	ms, err = GetMailLogsByCampaign(campaign.Id)
 	c.Assert(err, check.Equals, nil)

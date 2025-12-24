@@ -33,13 +33,13 @@ var embeddedFileExtensions = []string{".jpg", ".jpeg", ".png", ".gif"}
 // MailLog is a struct that holds information about an email that is to be
 // sent out.
 type MailLog struct {
-	Id          int64     `json:"-"`
-	UserId      int64     `json:"-"`
-	CampaignId  int64     `json:"campaign_id"`
-	RId         string    `json:"id"`
-	SendDate    time.Time `json:"send_date"`
-	SendAttempt int       `json:"send_attempt"`
-	Processing  bool      `json:"-"`
+	Id          int64      `json:"-"`
+	UserId      int64      `json:"-"`
+	CampaignId  int64      `json:"campaign_id"`
+	RId         string     `json:"id"`
+	SendDate    *time.Time `json:"send_date"`
+	SendAttempt int        `json:"send_attempt"`
+	Processing  bool       `json:"-"`
 
 	cachedCampaign *Campaign
 }
@@ -51,9 +51,9 @@ func GenerateMailLog(c *Campaign, r *Result, sendDate time.Time) error {
 		UserId:     c.UserId,
 		CampaignId: c.Id,
 		RId:        r.RId,
-		SendDate:   sendDate,
+		SendDate:   &sendDate,
 	}
-	return db.Save(m).Error
+	return db.Create(m).Error
 }
 
 // Backoff sets the MailLog SendDate to be the next entry in an exponential
@@ -73,12 +73,13 @@ func (m *MailLog) Backoff(reason error) error {
 	// temporary error of some sort during the SMTP transaction
 	m.SendAttempt++
 	backoffDuration := math.Pow(2, float64(m.SendAttempt))
-	m.SendDate = m.SendDate.Add(time.Minute * time.Duration(backoffDuration))
+	newSendDate := m.SendDate.Add(time.Minute * time.Duration(backoffDuration))
+	m.SendDate = &newSendDate
 	err = db.Save(m).Error
 	if err != nil {
 		return err
 	}
-	err = r.HandleEmailBackoff(reason, m.SendDate)
+	err = r.HandleEmailBackoff(reason, *m.SendDate)
 	if err != nil {
 		return err
 	}
@@ -300,7 +301,7 @@ func LockMailLogs(ms []*MailLog, lock bool) error {
 // in the database. This is intended to be called when Gophish is started
 // so that any previously locked maillogs can resume processing.
 func UnlockAllMailLogs() error {
-	return db.Model(&MailLog{}).Update("processing", false).Error
+	return db.Model(&MailLog{}).Where("processing = ?", true).Update("processing", false).Error
 }
 
 var maxBigInt = big.NewInt(math.MaxInt64)
@@ -356,7 +357,7 @@ func addAttachment(msg *gomail.Message, a Attachment, ptx PhishingTemplateContex
 		}
 	}(a))
 	if shouldEmbedAttachment(a.Name) {
-		msg.Embed(a.Name, copyFunc)
+		msg.Embed(a.Name, copyFunc, gomail.SetHeader(map[string][]string{"Content-Disposition": {"inline"}}))
 	} else {
 		msg.Attach(a.Name, copyFunc)
 	}

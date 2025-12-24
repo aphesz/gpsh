@@ -7,30 +7,30 @@ import (
 
 	log "github.com/gophish/gophish/logger"
 	"github.com/gophish/gophish/webhook"
-	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 // Campaign is a struct representing a created campaign
 type Campaign struct {
-	Id            int64     `json:"id"`
-	UserId        int64     `json:"-"`
-	Name          string    `json:"name" sql:"not null"`
-	CreatedDate   time.Time `json:"created_date"`
-	LaunchDate    time.Time `json:"launch_date"`
-	SendByDate    time.Time `json:"send_by_date"`
-	CompletedDate time.Time `json:"completed_date"`
-	TemplateId    int64     `json:"-"`
-	Template      Template  `json:"template"`
-	PageId        int64     `json:"-"`
-	Page          Page      `json:"page"`
-	Status        string    `json:"status"`
-	Results       []Result  `json:"results,omitempty"`
-	Groups        []Group   `json:"groups,omitempty"`
-	Events        []Event   `json:"timeline,omitempty"`
-	SMTPId        int64     `json:"-"`
-	SMTP          SMTP      `json:"smtp"`
-	URL           string    `json:"url"`
+	Id            int64      `json:"id"`
+	UserId        int64      `json:"-"`
+	Name          string     `json:"name" sql:"not null"`
+	CreatedDate   time.Time  `json:"created_date"`
+	LaunchDate    *time.Time `json:"launch_date"`
+	SendByDate    *time.Time `json:"send_by_date"`
+	CompletedDate *time.Time `json:"completed_date"`
+	TemplateId    int64      `json:"-"`
+	Template      Template   `json:"template"`
+	PageId        int64      `json:"-"`
+	Page          Page       `json:"page"`
+	Status        string     `json:"status"`
+	Results       []Result   `json:"results,omitempty" gorm:"-"`
+	Groups        []Group    `json:"groups,omitempty" gorm:"-"`
+	Events        []Event    `json:"timeline,omitempty" gorm:"-"`
+	SMTPId        int64      `json:"-"`
+	SMTP          SMTP       `json:"smtp"`
+	URL           string     `json:"url"`
 }
 
 // CampaignResults is a struct representing the results from a campaign
@@ -38,8 +38,8 @@ type CampaignResults struct {
 	Id      int64    `json:"id"`
 	Name    string   `json:"name"`
 	Status  string   `json:"status"`
-	Results []Result `json:"results,omitempty"`
-	Events  []Event  `json:"timeline,omitempty"`
+	Results []Result `json:"results,omitempty" gorm:"-"`
+	Events  []Event  `json:"timeline,omitempty" gorm:"-"`
 }
 
 // CampaignSummaries is a struct representing the overview of campaigns
@@ -52,9 +52,9 @@ type CampaignSummaries struct {
 type CampaignSummary struct {
 	Id            int64         `json:"id"`
 	CreatedDate   time.Time     `json:"created_date"`
-	LaunchDate    time.Time     `json:"launch_date"`
-	SendByDate    time.Time     `json:"send_by_date"`
-	CompletedDate time.Time     `json:"completed_date"`
+	LaunchDate    *time.Time    `json:"launch_date"`
+	SendByDate    *time.Time    `json:"send_by_date"`
+	CompletedDate *time.Time    `json:"completed_date"`
 	Status        string        `json:"status"`
 	Name          string        `json:"name"`
 	Stats         CampaignStats `json:"stats"`
@@ -142,7 +142,7 @@ func (c *Campaign) Validate() error {
 		return ErrPageNotSpecified
 	case c.SMTP.Name == "":
 		return ErrSMTPNotSpecified
-	case !c.SendByDate.IsZero() && !c.LaunchDate.IsZero() && c.SendByDate.Before(c.LaunchDate):
+	case c.SendByDate != nil && c.LaunchDate != nil && c.SendByDate.Before(*c.LaunchDate):
 		return ErrInvalidSendByDate
 	}
 	return nil
@@ -173,7 +173,7 @@ func AddEvent(e *Event, campaignID int64) error {
 		log.Errorf("error getting active webhooks: %v", err)
 	}
 
-	return db.Save(e).Error
+	return db.Create(e).Error
 }
 
 // getDetails retrieves the related attributes of the campaign
@@ -181,12 +181,12 @@ func AddEvent(e *Event, campaignID int64) error {
 // an error is returned. Otherwise, the attribute name is set to [Deleted],
 // indicating the user deleted the attribute (template, smtp, etc.)
 func (c *Campaign) getDetails() error {
-	err := db.Model(c).Related(&c.Results).Error
+	err := db.Where("campaign_id = ?", c.Id).Find(&c.Results).Error
 	if err != nil {
 		log.Warnf("%s: results not found for campaign", err)
 		return err
 	}
-	err = db.Model(c).Related(&c.Events).Error
+	err = db.Where("campaign_id = ?", c.Id).Find(&c.Events).Error
 	if err != nil {
 		log.Warnf("%s: events not found for campaign", err)
 		return err
@@ -244,12 +244,15 @@ func (c *Campaign) getFromAddress() string {
 // generateSendDate creates a sendDate
 func (c *Campaign) generateSendDate(idx int, totalRecipients int) time.Time {
 	// If no send date is specified, just return the launch date
-	if c.SendByDate.IsZero() || c.SendByDate.Equal(c.LaunchDate) {
-		return c.LaunchDate
+	if c.SendByDate == nil || c.LaunchDate == nil || c.SendByDate.Equal(*c.LaunchDate) {
+		if c.LaunchDate != nil {
+			return *c.LaunchDate
+		}
+		return time.Now().UTC()
 	}
 	// Otherwise, we can calculate the range of minutes to send emails
 	// (since we only poll once per minute)
-	totalMinutes := c.SendByDate.Sub(c.LaunchDate).Minutes()
+	totalMinutes := c.SendByDate.Sub(*c.LaunchDate).Minutes()
 
 	// Next, we can determine how many minutes should elapse between emails
 	minutesPerEmail := totalMinutes / float64(totalRecipients)
@@ -304,7 +307,7 @@ func getCampaignStats(cid int64) (CampaignStats, error) {
 // GetCampaigns returns the campaigns owned by the given user.
 func GetCampaigns(uid int64) ([]Campaign, error) {
 	cs := []Campaign{}
-	err := db.Model(&User{Id: uid}).Related(&cs).Error
+	err := db.Where("user_id = ?", uid).Find(&cs).Error
 	if err != nil {
 		log.Error(err)
 	}
@@ -371,7 +374,7 @@ func GetCampaignSummary(id int64, uid int64) (CampaignSummary, error) {
 // ref: #1726
 func GetCampaignMailContext(id int64, uid int64) (Campaign, error) {
 	c := Campaign{}
-	err := db.Where("id = ?", id).Where("user_id = ?", uid).Find(&c).Error
+	err := db.Where("id = ?", id).Where("user_id = ?", uid).First(&c).Error
 	if err != nil {
 		return c, err
 	}
@@ -397,7 +400,7 @@ func GetCampaignMailContext(id int64, uid int64) (Campaign, error) {
 // GetCampaign returns the campaign, if it exists, specified by the given id and user_id.
 func GetCampaign(id int64, uid int64) (Campaign, error) {
 	c := Campaign{}
-	err := db.Where("id = ?", id).Where("user_id = ?", uid).Find(&c).Error
+	err := db.Where("id = ?", id).Where("user_id = ?", uid).First(&c).Error
 	if err != nil {
 		log.Errorf("%s: campaign not found", err)
 		return c, err
@@ -409,7 +412,7 @@ func GetCampaign(id int64, uid int64) (Campaign, error) {
 // GetCampaignResults returns just the campaign results for the given campaign
 func GetCampaignResults(id int64, uid int64) (CampaignResults, error) {
 	cr := CampaignResults{}
-	err := db.Table("campaigns").Where("id=? and user_id=?", id, uid).Find(&cr).Error
+	err := db.Table("campaigns").Where("id=? and user_id=?", id, uid).First(&cr).Error
 	if err != nil {
 		log.WithFields(logrus.Fields{
 			"campaign_id": id,
@@ -457,15 +460,17 @@ func PostCampaign(c *Campaign, uid int64) error {
 	// Fill in the details
 	c.UserId = uid
 	c.CreatedDate = time.Now().UTC()
-	c.CompletedDate = time.Time{}
+	c.CompletedDate = nil
 	c.Status = CampaignQueued
-	if c.LaunchDate.IsZero() {
-		c.LaunchDate = c.CreatedDate
+	if c.LaunchDate == nil {
+		c.LaunchDate = &c.CreatedDate
 	} else {
-		c.LaunchDate = c.LaunchDate.UTC()
+		utcLaunch := c.LaunchDate.UTC()
+		c.LaunchDate = &utcLaunch
 	}
-	if !c.SendByDate.IsZero() {
-		c.SendByDate = c.SendByDate.UTC()
+	if c.SendByDate != nil {
+		utcSendBy := c.SendByDate.UTC()
+		c.SendByDate = &utcSendBy
 	}
 	if c.LaunchDate.Before(c.CreatedDate) || c.LaunchDate.Equal(c.CreatedDate) {
 		c.Status = CampaignInProgress
@@ -560,9 +565,9 @@ func PostCampaign(c *Campaign, uid int64) error {
 				Status:       StatusScheduled,
 				CampaignId:   c.Id,
 				UserId:       c.UserId,
-				SendDate:     sendDate,
+				SendDate:     &sendDate,
 				Reported:     false,
-				ModifiedDate: c.CreatedDate,
+				ModifiedDate: &c.CreatedDate,
 			}
 			err = r.GenerateId(tx)
 			if err != nil {
@@ -592,7 +597,7 @@ func PostCampaign(c *Campaign, uid int64) error {
 				UserId:     c.UserId,
 				CampaignId: c.Id,
 				RId:        r.RId,
-				SendDate:   sendDate,
+				SendDate:   &sendDate,
 				Processing: processing,
 			}
 			err = tx.Save(m).Error
@@ -659,7 +664,8 @@ func CompleteCampaign(id int64, uid int64) error {
 		return nil
 	}
 	// Mark the campaign as complete
-	c.CompletedDate = time.Now().UTC()
+	now := time.Now().UTC()
+	c.CompletedDate = &now
 	c.Status = CampaignComplete
 	err = db.Model(&Campaign{}).Where("id=? and user_id=?", id, uid).
 		Select([]string{"completed_date", "status"}).UpdateColumns(&c).Error

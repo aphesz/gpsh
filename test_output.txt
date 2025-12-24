@@ -1,0 +1,83 @@
+=== RUN   Test
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T01:51:01+08:00" level=info msg="Please login with the username admin and the password 2b57cbc75a04c43f"
+Checking attachment file -> calendar-file-with-vars.ics
+Checking attachment file -> excel-with-vars.xlsx.b64
+Checking attachment file -> html-file-with-vars.html
+Checking attachment file -> html-file-without-vars.html
+Checking attachment file -> powerpoint-with-vars.pptx.b64
+Checking attachment file -> text-file-with-vars.txt
+Checking attachment file -> text-file-without-vars.txt
+Checking attachment file -> word-file-with-vars.docm.b64
+Checking attachment file -> word-file-without-vars.docx.b64
+time="2025-12-25T01:51:01+08:00" level=info msg="Marking campaign as complete" campaign_id=2
+time="2025-12-25T01:51:01+08:00" level=info msg="Deleting campaign" campaign_id=3
+time="2025-12-25T01:51:01+08:00" level=info msg="Deleting campaigns for user ID 2"
+time="2025-12-25T01:51:01+08:00" level=info msg="Deleting pages for user ID 2"
+time="2025-12-25T01:51:01+08:00" level=info msg="Deleting templates for user ID 2"
+time="2025-12-25T01:51:01+08:00" level=info msg="Deleting groups for user ID 2"
+time="2025-12-25T01:51:01+08:00" level=info msg="Deleting sending profiles for user ID 2"
+
+----------------------------------------------------------------------
+FAIL: maillog_test.go:384: ModelsSuite.TestEmbedAttachment
+
+maillog_test.go:405:
+    // The email package simply ignores attachments where the Content-Disposition header is set
+    // to inline, so the best we can do without replacing the whole thing is to check that only
+    // the text file was added as an attachment.
+    ch.Assert(got.Attachments, check.HasLen, 1)
+... obtained []*email.Attachment = []*email.Attachment{(*email.Attachment)(0x1400061fa90), (*email.Attachment)(0x1400061fae0)}
+... n int = 1
+
+
+----------------------------------------------------------------------
+FAIL: maillog_test.go:194: ModelsSuite.TestGenerateMailLog
+
+maillog_test.go:212:
+    ch.Assert(*m.SendDate, check.Equals, *campaign.LaunchDate)
+... obtained time.Time = time.Date(2025, time.December, 25, 1, 51, 1, 643278000, time.Location("")) ("2025-12-25 01:51:01.643278 +0800 +0800")
+... expected time.Time = time.Date(2025, time.December, 25, 1, 51, 1, 643278000, time.Local) ("2025-12-25 01:51:01.643278 +0800 +08 m=+0.240420085")
+
+time="2025-12-25T01:51:01+08:00" level=error msg="record not found"
+time="2025-12-25T01:51:01+08:00" level=error msg="record not found"
+time="2025-12-25T01:51:01+08:00" level=error msg="record not found"
+Checking user -> modify_system
+Checking user -> modify_objects
+Checking user -> view_objects
+Checking admin -> modify_system
+Checking admin -> modify_objects
+Checking admin -> view_objects
+time="2025-12-25T01:51:01+08:00" level=error msg="Invalid SMTP From address because it is not an email address"
+time="2025-12-25T01:51:01+08:00" level=error msg="Invalid SMTP From address because it is not an email address"
+time="2025-12-25T01:51:01+08:00" level=error msg="No From Address specified"
+time="2025-12-25T01:51:01+08:00" level=error msg="No SMTP Host specified"
+OOPS: 68 passed, 2 FAILED
+--- FAIL: Test (0.26s)
+FAIL
+FAIL	github.com/gophish/gophish/models	0.480s
+FAIL

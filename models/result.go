@@ -8,8 +8,8 @@ import (
 	"time"
 
 	log "github.com/gophish/gophish/logger"
-	"github.com/jinzhu/gorm"
 	"github.com/oschwald/maxminddb-golang"
+	"gorm.io/gorm"
 )
 
 type mmCity struct {
@@ -24,17 +24,17 @@ type mmGeoPoint struct {
 // Result contains the fields for a result object,
 // which is a representation of a target in a campaign.
 type Result struct {
-	Id           int64     `json:"-"`
-	CampaignId   int64     `json:"-"`
-	UserId       int64     `json:"-"`
-	RId          string    `json:"id"`
-	Status       string    `json:"status" sql:"not null"`
-	IP           string    `json:"ip"`
-	Latitude     float64   `json:"latitude"`
-	Longitude    float64   `json:"longitude"`
-	SendDate     time.Time `json:"send_date"`
-	Reported     bool      `json:"reported" sql:"not null"`
-	ModifiedDate time.Time `json:"modified_date"`
+	Id           int64      `json:"-"`
+	CampaignId   int64      `json:"-"`
+	UserId       int64      `json:"-"`
+	RId          string     `json:"id"`
+	Status       string     `json:"status" sql:"not null"`
+	IP           string     `json:"ip"`
+	Latitude     float64    `json:"latitude"`
+	Longitude    float64    `json:"longitude"`
+	SendDate     *time.Time `json:"send_date"`
+	Reported     bool       `json:"reported" sql:"not null"`
+	ModifiedDate *time.Time `json:"modified_date"`
 	BaseRecipient
 }
 
@@ -58,9 +58,9 @@ func (r *Result) HandleEmailSent() error {
 	if err != nil {
 		return err
 	}
-	r.SendDate = event.Time
+	r.SendDate = &event.Time
 	r.Status = EventSent
-	r.ModifiedDate = event.Time
+	r.ModifiedDate = &event.Time
 	return db.Save(r).Error
 }
 
@@ -72,7 +72,7 @@ func (r *Result) HandleEmailError(err error) error {
 		return err
 	}
 	r.Status = Error
-	r.ModifiedDate = event.Time
+	r.ModifiedDate = &event.Time
 	return db.Save(r).Error
 }
 
@@ -84,8 +84,8 @@ func (r *Result) HandleEmailBackoff(err error, sendDate time.Time) error {
 		return err
 	}
 	r.Status = StatusRetry
-	r.SendDate = sendDate
-	r.ModifiedDate = event.Time
+	r.SendDate = &sendDate
+	r.ModifiedDate = &event.Time
 	return db.Save(r).Error
 }
 
@@ -102,7 +102,7 @@ func (r *Result) HandleEmailOpened(details EventDetails) error {
 		return nil
 	}
 	r.Status = EventOpened
-	r.ModifiedDate = event.Time
+	r.ModifiedDate = &event.Time
 	return db.Save(r).Error
 }
 
@@ -119,7 +119,7 @@ func (r *Result) HandleClickedLink(details EventDetails) error {
 		return nil
 	}
 	r.Status = EventClicked
-	r.ModifiedDate = event.Time
+	r.ModifiedDate = &event.Time
 	return db.Save(r).Error
 }
 
@@ -131,7 +131,7 @@ func (r *Result) HandleFormSubmit(details EventDetails) error {
 		return err
 	}
 	r.Status = EventDataSubmit
-	r.ModifiedDate = event.Time
+	r.ModifiedDate = &event.Time
 	return db.Save(r).Error
 }
 
@@ -143,7 +143,7 @@ func (r *Result) HandleEmailReport(details EventDetails) error {
 		return err
 	}
 	r.Reported = true
-	r.ModifiedDate = event.Time
+	r.ModifiedDate = &event.Time
 	return db.Save(r).Error
 }
 

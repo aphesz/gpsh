@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/PuerkitoBio/goquery"
+	mid "github.com/gophish/gophish/middleware"
 )
 
 func attemptLogin(t *testing.T, ctx *testContext, client *http.Client, username, password, optionalPath string) *http.Response {
@@ -43,8 +44,14 @@ func attemptLogin(t *testing.T, ctx *testContext, client *http.Client, username,
 		t.Fatalf("error creating new /login request: %v", err)
 	}
 
-	req.Header.Set("Cookie", resp.Header.Get("Set-Cookie"))
+	fmt.Printf("Extracted Token: %s\n", token)
+	// Properly copy all cookies
+	for _, cookie := range resp.Cookies() {
+		fmt.Printf("Copying cookie: %s=%s\n", cookie.Name, cookie.Value)
+		req.AddCookie(cookie)
+	}
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Referer", fmt.Sprintf("%s/login", ctx.adminServer.URL))
 
 	resp, err = client.Do(req)
 	if err != nil {
@@ -56,6 +63,11 @@ func attemptLogin(t *testing.T, ctx *testContext, client *http.Client, username,
 func TestLoginCSRF(t *testing.T) {
 	ctx := setupTest(t)
 	defer tearDown(t, ctx)
+
+	// Re-enable CSRF for /login for this test only
+	originalPrefixes := mid.CSRFExemptPrefixes
+	mid.CSRFExemptPrefixes = []string{"/api"} // Reset to default
+	defer func() { mid.CSRFExemptPrefixes = originalPrefixes }()
 	resp, err := http.PostForm(fmt.Sprintf("%s/login", ctx.adminServer.URL),
 		url.Values{
 			"username": {"admin"},

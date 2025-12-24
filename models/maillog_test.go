@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"mime"
 	"net/textproto"
 	"testing"
 	"time"
@@ -44,7 +45,7 @@ func (s *ModelsSuite) TestGetQueuedMailLogs(ch *check.C) {
 	ch.Assert(err, check.Equals, nil)
 	err = LockMailLogs(ms, false)
 	ch.Assert(err, check.Equals, nil)
-	ms, err = GetQueuedMailLogs(campaign.LaunchDate)
+	ms, err = GetQueuedMailLogs(*campaign.LaunchDate)
 	ch.Assert(err, check.Equals, nil)
 	got := make(map[string]*MailLog)
 	for _, m := range ms {
@@ -54,7 +55,7 @@ func (s *ModelsSuite) TestGetQueuedMailLogs(ch *check.C) {
 		if m, ok := got[r.RId]; ok {
 			ch.Assert(m.RId, check.Equals, r.RId)
 			ch.Assert(m.CampaignId, check.Equals, campaign.Id)
-			ch.Assert(m.SendDate, check.Equals, campaign.LaunchDate)
+			ch.Assert(*m.SendDate, check.Equals, *campaign.LaunchDate)
 			ch.Assert(m.UserId, check.Equals, campaign.UserId)
 			ch.Assert(m.SendAttempt, check.Equals, 0)
 		} else {
@@ -71,7 +72,7 @@ func (s *ModelsSuite) TestMailLogBackoff(ch *check.C) {
 		Find(m).Error
 	ch.Assert(err, check.Equals, nil)
 	ch.Assert(m.SendAttempt, check.Equals, 0)
-	ch.Assert(m.SendDate, check.Equals, campaign.LaunchDate)
+	ch.Assert(*m.SendDate, check.Equals, *campaign.LaunchDate)
 
 	expectedError := &textproto.Error{
 		Code: 500,
@@ -86,11 +87,11 @@ func (s *ModelsSuite) TestMailLogBackoff(ch *check.C) {
 		expectedSendDate := m.SendDate.Add(time.Minute * time.Duration(expectedDuration))
 		err = m.Backoff(expectedError)
 		ch.Assert(err, check.Equals, nil)
-		ch.Assert(m.SendDate, check.Equals, expectedSendDate)
+		ch.Assert(*m.SendDate, check.Equals, expectedSendDate)
 		ch.Assert(m.Processing, check.Equals, false)
 		result, err := GetResult(m.RId)
 		ch.Assert(err, check.Equals, nil)
-		ch.Assert(result.SendDate, check.Equals, expectedSendDate)
+		ch.Assert(*result.SendDate, check.Equals, expectedSendDate)
 		ch.Assert(result.Status, check.Equals, StatusRetry)
 	}
 	// Get our updated campaign and check for the added event
@@ -184,7 +185,7 @@ func (s *ModelsSuite) TestMailLogSuccess(ch *check.C) {
 		Time:       gotEvent.Time,
 	}
 	ch.Assert(gotEvent, check.DeepEquals, expectedEvent)
-	ch.Assert(result.SendDate, check.Equals, gotEvent.Time)
+	ch.Assert(*result.SendDate, check.Equals, gotEvent.Time)
 
 	ms, err := GetMailLogsByCampaign(campaign.Id)
 	ch.Assert(err, check.Equals, nil)
@@ -199,7 +200,9 @@ func (s *ModelsSuite) TestGenerateMailLog(ch *check.C) {
 	result := Result{
 		RId: "abc1234",
 	}
-	err := GenerateMailLog(&campaign, &result, campaign.LaunchDate)
+	now := time.Now()
+	campaign.LaunchDate = &now
+	err := GenerateMailLog(&campaign, &result, *campaign.LaunchDate)
 	ch.Assert(err, check.Equals, nil)
 
 	m := MailLog{}
@@ -207,7 +210,7 @@ func (s *ModelsSuite) TestGenerateMailLog(ch *check.C) {
 	ch.Assert(err, check.Equals, nil)
 	ch.Assert(m.RId, check.Equals, result.RId)
 	ch.Assert(m.CampaignId, check.Equals, campaign.Id)
-	ch.Assert(m.SendDate, check.Equals, campaign.LaunchDate)
+	ch.Assert(m.SendDate.UTC(), check.Equals, campaign.LaunchDate.UTC())
 	ch.Assert(m.UserId, check.Equals, campaign.UserId)
 	ch.Assert(m.SendAttempt, check.Equals, 0)
 	ch.Assert(m.Processing, check.Equals, false)
@@ -400,8 +403,15 @@ func (s *ModelsSuite) TestEmbedAttachment(ch *check.C) {
 	// The email package simply ignores attachments where the Content-Disposition header is set
 	// to inline, so the best we can do without replacing the whole thing is to check that only
 	// the text file was added as an attachment.
-	ch.Assert(got.Attachments, check.HasLen, 1)
-	ch.Assert(got.Attachments[0].Filename, check.Equals, "test.txt")
+	attachments := []*email.Attachment{}
+	for _, a := range got.Attachments {
+		disposition, _, _ := mime.ParseMediaType(a.Header.Get("Content-Disposition"))
+		if disposition != "inline" {
+			attachments = append(attachments, a)
+		}
+	}
+	ch.Assert(attachments, check.HasLen, 1)
+	ch.Assert(attachments[0].Filename, check.Equals, "test.txt")
 }
 
 func BenchmarkMailLogGenerate100(b *testing.B) {

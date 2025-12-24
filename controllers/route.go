@@ -3,8 +3,11 @@ package controllers
 import (
 	"compress/gzip"
 	"context"
+	"crypto/rand"
+	"crypto/sha256"
 	"crypto/tls"
 	"html/template"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -142,16 +145,29 @@ func (as *AdminServer) registerRoutes() {
 		api.WithWorker(as.worker),
 		api.WithLimiter(as.limiter),
 	)
-	router.PathPrefix("/api/").Handler(api)
+	router.PathPrefix("/api/").Handler(as.limiter.Limit(api))
 
 	// Setup static file serving
 	router.PathPrefix("/").Handler(http.FileServer(unindexed.Dir("./static/")))
 
 	// Setup CSRF Protection
-	csrfKey := []byte(as.config.CSRFKey)
-	if len(csrfKey) == 0 {
-		csrfKey = []byte(auth.GenerateSecureKey(auth.APIKeyLength))
+	var csrfKey []byte
+	if as.config.CSRFKey != "" {
+		csrfKey = []byte(as.config.CSRFKey)
+	} else {
+		// Generate 32 bytes of random data for the key
+		key := make([]byte, 32)
+		_, err := io.ReadFull(rand.Reader, key)
+		if err != nil {
+			log.Fatal(err)
+		}
+		csrfKey = key
 	}
+	// gorrilla/csrf requires a 32-byte key. To ensure we have exactly 32 bytes,
+	// (and to support legacy keys of arbitrary length), we hash the key.
+	h := sha256.New()
+	h.Write(csrfKey)
+	csrfKey = h.Sum(nil)
 	csrfHandler := csrf.Protect(csrfKey,
 		csrf.FieldName("csrf_token"),
 		csrf.Secure(as.config.UseTLS),
@@ -392,7 +408,8 @@ func (as *AdminServer) Login(w http.ResponseWriter, r *http.Request) {
 			as.handleInvalidLogin(w, r, "Account Locked")
 			return
 		}
-		u.LastLogin = time.Now().UTC()
+		now := time.Now().UTC()
+		u.LastLogin = &now
 		err = models.PutUser(&u)
 		if err != nil {
 			log.Error(err)

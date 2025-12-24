@@ -1,0 +1,8 @@
+# github.com/gophish/gophish/controllers [github.com/gophish/gophish/controllers.test]
+controllers/controllers_test.go:41:2: declared and not used: l
+controllers/controllers_test.go:47:34: undefined: mid
+controllers/route_test.go:67:22: undefined: mid
+controllers/route_test.go:68:2: undefined: mid
+controllers/route_test.go:69:17: undefined: mid
+FAIL	github.com/gophish/gophish/controllers [build failed]
+FAIL

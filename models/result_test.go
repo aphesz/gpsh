@@ -43,25 +43,28 @@ func (s *ModelsSuite) TestResultSendingStatus(ch *check.C) {
 	// be sending
 	for _, r := range c.Results {
 		ch.Assert(r.Status, check.Equals, StatusSending)
-		ch.Assert(r.ModifiedDate, check.Equals, c.CreatedDate)
+		ch.Assert(*r.ModifiedDate, check.Equals, c.CreatedDate)
 	}
 }
 func (s *ModelsSuite) TestResultScheduledStatus(ch *check.C) {
 	c := s.createCampaignDependencies(ch)
-	c.LaunchDate = time.Now().UTC().Add(time.Hour * time.Duration(1))
+	launchDate := time.Now().UTC().Add(time.Hour * time.Duration(1))
+	c.LaunchDate = &launchDate
 	ch.Assert(PostCampaign(&c, c.UserId), check.Equals, nil)
 	// This campaign wasn't scheduled, so we expect the status to
 	// be sending
 	for _, r := range c.Results {
 		ch.Assert(r.Status, check.Equals, StatusScheduled)
-		ch.Assert(r.ModifiedDate, check.Equals, c.CreatedDate)
+		ch.Assert(*r.ModifiedDate, check.Equals, c.CreatedDate)
 	}
 }
 
 func (s *ModelsSuite) TestResultVariableStatus(ch *check.C) {
 	c := s.createCampaignDependencies(ch)
-	c.LaunchDate = time.Now().UTC()
-	c.SendByDate = c.LaunchDate.Add(2 * time.Minute)
+	now := time.Now().UTC()
+	c.LaunchDate = &now
+	sendByDate := c.LaunchDate.Add(2 * time.Minute)
+	c.SendByDate = &sendByDate
 	ch.Assert(PostCampaign(&c, c.UserId), check.Equals, nil)
 
 	// The campaign has a window smaller than our group size, so we expect some

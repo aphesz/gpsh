@@ -1,0 +1,4 @@
+# github.com/gophish/gophish/controllers [github.com/gophish/gophish/controllers.test]
+controllers/controllers_test.go:41:2: declared and not used: l
+FAIL	github.com/gophish/gophish/controllers [build failed]
+FAIL

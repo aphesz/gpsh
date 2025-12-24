@@ -32,18 +32,20 @@ func (s *ModelsSuite) SetUpSuite(c *check.C) {
 func (s *ModelsSuite) TearDownTest(c *check.C) {
 	// Clear database tables between each test. If new tables are
 	// used in this test suite they will need to be cleaned up here.
-	db.Delete(Group{})
-	db.Delete(Target{})
-	db.Delete(GroupTarget{})
-	db.Delete(SMTP{})
-	db.Delete(Page{})
-	db.Delete(Result{})
-	db.Delete(MailLog{})
-	db.Delete(Campaign{})
+	db.Where("1 = 1").Delete(Group{})
+	db.Where("1 = 1").Delete(Target{})
+	db.Where("1 = 1").Delete(GroupTarget{})
+	db.Where("1 = 1").Delete(SMTP{})
+	db.Where("1 = 1").Delete(Page{})
+	db.Where("1 = 1").Delete(Result{})
+	db.Where("1 = 1").Delete(MailLog{})
+	db.Where("1 = 1").Delete(Campaign{})
+	db.Where("1 = 1").Delete(Template{})
+	db.Where("1 = 1").Delete(Event{})
 
 	// Reset users table to default state.
-	db.Not("id", 1).Delete(User{})
-	db.Model(User{}).Update("username", "admin")
+	db.Not("id", 1).Where("1 = 1").Delete(User{})
+	db.Model(User{}).Where("id = ?", 1).Update("username", "admin")
 }
 
 func (s *ModelsSuite) createCampaignDependencies(ch *check.C, optional ...string) Campaign {
@@ -117,23 +119,26 @@ func setupBenchmark(b *testing.B) {
 }
 
 func tearDownBenchmark(b *testing.B) {
-	err := db.Close()
+	sqlDB, _ := db.DB()
+	err := sqlDB.Close()
 	if err != nil {
 		b.Fatalf("error closing database: %v", err)
 	}
 }
 
 func resetBenchmark(b *testing.B) {
-	db.Delete(Group{})
-	db.Delete(Target{})
-	db.Delete(GroupTarget{})
-	db.Delete(SMTP{})
-	db.Delete(Page{})
-	db.Delete(Result{})
-	db.Delete(MailLog{})
-	db.Delete(Campaign{})
+	db.Where("1 = 1").Delete(Group{})
+	db.Where("1 = 1").Delete(Target{})
+	db.Where("1 = 1").Delete(GroupTarget{})
+	db.Where("1 = 1").Delete(SMTP{})
+	db.Where("1 = 1").Delete(Page{})
+	db.Where("1 = 1").Delete(Result{})
+	db.Where("1 = 1").Delete(MailLog{})
+	db.Where("1 = 1").Delete(Campaign{})
+	db.Where("1 = 1").Delete(Template{})
+	db.Where("1 = 1").Delete(Event{})
 
 	// Reset users table to default state.
-	db.Not("id", 1).Delete(User{})
-	db.Model(User{}).Update("username", "admin")
+	db.Not("id", 1).Where("1 = 1").Delete(User{})
+	db.Model(User{}).Where("id = ?", 1).Update("username", "admin")
 }

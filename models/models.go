@@ -12,13 +12,16 @@ import (
 
 	"bitbucket.org/liamstask/goose/lib/goose"
 
-	mysql "github.com/go-sql-driver/mysql"
+	mysqlDriver "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+
 	"github.com/gophish/gophish/auth"
 	"github.com/gophish/gophish/config"
 
 	log "github.com/gophish/gophish/logger"
-	"github.com/jinzhu/gorm"
-	_ "github.com/mattn/go-sqlite3" // Blank import needed to import sqlite3
 )
 
 var db *gorm.DB
@@ -160,11 +163,9 @@ func Setup(c *config.Config) error {
 				log.Error("Failed to append PEM.")
 				return err
 			}
-			mysql.RegisterTLSConfig("ssl_ca", &tls.Config{
+			mysqlDriver.RegisterTLSConfig("ssl_ca", &tls.Config{
 				RootCAs: rootCertPool,
 			})
-			// Default database is sqlite3, which supports no tls, as connection
-			// is file based
 		default:
 		}
 	}
@@ -172,7 +173,15 @@ func Setup(c *config.Config) error {
 	// Open our database connection
 	i := 0
 	for {
-		db, err = gorm.Open(conf.DBName, conf.DBPath)
+		var dialector gorm.Dialector
+		if conf.DBName == "mysql" {
+			dialector = mysql.Open(conf.DBPath)
+		} else {
+			dialector = sqlite.Open(conf.DBPath)
+		}
+		db, err = gorm.Open(dialector, &gorm.Config{
+			Logger: logger.Default.LogMode(logger.Silent),
+		})
 		if err == nil {
 			break
 		}
@@ -184,15 +193,19 @@ func Setup(c *config.Config) error {
 		log.Warn("waiting for database to be up...")
 		time.Sleep(5 * time.Second)
 	}
-	db.LogMode(false)
-	db.SetLogger(log.Logger)
-	db.DB().SetMaxOpenConns(1)
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	sqlDB.SetMaxOpenConns(1)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 	// Migrate up to the latest version
-	err = goose.RunMigrationsOnDb(migrateConf, migrateConf.MigrationsDir, latest, db.DB())
+	err = goose.RunMigrationsOnDb(migrateConf, migrateConf.MigrationsDir, latest, sqlDB)
 	if err != nil {
 		log.Error(err)
 		return err

@@ -1,0 +1,654 @@
+=== RUN   TestOpenedPhishingEmail
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:02+08:00" level=info msg="Please login with the username admin and the password 108eb7464bfe2d84"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53733 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:02+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:02 +0800] \"GET /track?rid=CgozlQj HTTP/1.1\" 200 95 \"\" \"Go-http-client/1.1\""
+--- PASS: TestOpenedPhishingEmail (0.39s)
+=== RUN   TestReportedPhishingEmail
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:02+08:00" level=info msg="Please login with the username admin and the password 5e6eb7a65ba17293"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53737 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:02+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:02 +0800] \"GET /report?rid=eRAMmAh HTTP/1.1\" 204 0 \"\" \"Go-http-client/1.1\""
+--- PASS: TestReportedPhishingEmail (0.36s)
+=== RUN   TestClickedPhishingLinkAfterOpen
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:02+08:00" level=info msg="Please login with the username admin and the password 470f7915d182c026"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53741 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:03+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:03 +0800] \"GET /track?rid=EgMLriU HTTP/1.1\" 200 95 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:03+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:03 +0800] \"GET /?rid=EgMLriU HTTP/1.1\" 200 43 \"\" \"Go-http-client/1.1\""
+--- PASS: TestClickedPhishingLinkAfterOpen (0.37s)
+=== RUN   TestNoRecipientID
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:03+08:00" level=info msg="Please login with the username admin and the password 86cef59c7dc7e521"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53745 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:03+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:03 +0800] \"GET /track HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:03+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:03 +0800] \"GET / HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+--- PASS: TestNoRecipientID (0.37s)
+=== RUN   TestInvalidRecipientID
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:03+08:00" level=info msg="Please login with the username admin and the password e5959abe3615f338"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53750 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:03+08:00" level=error msg="record not found"
+time="2025-12-25T02:02:03+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:03 +0800] \"GET /track?rid=XXXXXXXXXX HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:03+08:00" level=error msg="record not found"
+time="2025-12-25T02:02:03+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:03 +0800] \"GET /?rid=XXXXXXXXXX HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:03+08:00" level=error msg="record not found"
+time="2025-12-25T02:02:03+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:03 +0800] \"GET /report?rid=XXXXXXXXXX HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+--- PASS: TestInvalidRecipientID (0.37s)
+=== RUN   TestCompletedCampaignClick
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:03+08:00" level=info msg="Please login with the username admin and the password 853b38bcda515090"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53756 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:04+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:04 +0800] \"GET /track?rid=geVQdFP HTTP/1.1\" 200 95 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:04+08:00" level=info msg="Marking campaign as complete" campaign_id=1
+time="2025-12-25T02:02:04+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:04 +0800] \"GET /track?rid=geVQdFP HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:04+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:04 +0800] \"GET /?rid=geVQdFP HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+--- PASS: TestCompletedCampaignClick (0.37s)
+=== RUN   TestRobotsHandler
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:04+08:00" level=info msg="Please login with the username admin and the password 73f581cc15e5aa1c"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53761 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:04+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:04 +0800] \"GET /robots.txt HTTP/1.1\" 200 26 \"\" \"Go-http-client/1.1\""
+--- PASS: TestRobotsHandler (0.36s)
+=== RUN   TestInvalidPreviewID
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:04+08:00" level=info msg="Please login with the username admin and the password 90bc81709528d085"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53765 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:04+08:00" level=error msg="record not found"
+time="2025-12-25T02:02:04+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:04 +0800] \"GET /track?rid=preview-bogus HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:04+08:00" level=error msg="record not found"
+time="2025-12-25T02:02:04+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:04 +0800] \"GET /?rid=preview-bogus HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:04+08:00" level=error msg="record not found"
+time="2025-12-25T02:02:04+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:04 +0800] \"GET /report?rid=preview-bogus HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+--- PASS: TestInvalidPreviewID (0.36s)
+=== RUN   TestPreviewTrack
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:05+08:00" level=info msg="Please login with the username admin and the password 275011019673e7fb"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53771 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:05+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:05 +0800] \"GET /track?rid=preview-N56Gj35 HTTP/1.1\" 200 95 \"\" \"Go-http-client/1.1\""
+--- PASS: TestPreviewTrack (0.37s)
+=== RUN   TestPreviewClick
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:05+08:00" level=info msg="Please login with the username admin and the password 470583b7d9e27322"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53775 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:05+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:05 +0800] \"GET /?rid=preview-z7C4urm HTTP/1.1\" 200 43 \"\" \"Go-http-client/1.1\""
+--- PASS: TestPreviewClick (0.36s)
+=== RUN   TestInvalidTransparencyRequest
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:05+08:00" level=info msg="Please login with the username admin and the password 8b448dbc83aeb48b"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53779 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:05+08:00" level=error msg="record not found"
+time="2025-12-25T02:02:05+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:05 +0800] \"GET /track?rid=bogus+ HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:05+08:00" level=error msg="record not found"
+time="2025-12-25T02:02:05+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:05 +0800] \"GET /?rid=bogus+ HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:05+08:00" level=error msg="record not found"
+time="2025-12-25T02:02:05+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:05 +0800] \"GET /report?rid=bogus+ HTTP/1.1\" 404 19 \"\" \"Go-http-client/1.1\""
+--- PASS: TestInvalidTransparencyRequest (0.36s)
+=== RUN   TestTransparencyRequest
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:06+08:00" level=info msg="Please login with the username admin and the password 84e596217a700eed"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53785 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:06+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:06 +0800] \"GET /?rid=Xq7PEtV+ HTTP/1.1\" 200 96 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:06+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:06 +0800] \"GET /track?rid=Xq7PEtV+ HTTP/1.1\" 200 96 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:06+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:06 +0800] \"GET /report?rid=Xq7PEtV+ HTTP/1.1\" 200 96 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:06+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:06 +0800] \"GET /?rid=Xq7PEtV%2b HTTP/1.1\" 200 96 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:06+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:06 +0800] \"GET /track?rid=Xq7PEtV%2b HTTP/1.1\" 200 96 \"\" \"Go-http-client/1.1\""
+time="2025-12-25T02:02:06+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:06 +0800] \"GET /report?rid=Xq7PEtV%2b HTTP/1.1\" 200 96 \"\" \"Go-http-client/1.1\""
+--- PASS: TestTransparencyRequest (0.37s)
+=== RUN   TestRedirectTemplating
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:06+08:00" level=info msg="Please login with the username admin and the password ef3bde3444cd5cc5"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53789 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:06+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:06 +0800] \"POST /?rid=dWC9jjj HTTP/1.1\" 302 0 \"\" \"Go-http-client/1.1\""
+--- PASS: TestRedirectTemplating (0.37s)
+=== RUN   TestLoginCSRF
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:06+08:00" level=info msg="Please login with the username admin and the password 4190b00fb1fb9604"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53793 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:07+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:07 +0800] \"POST /login HTTP/1.1\" 403 33 \"\" \"Go-http-client/1.1\""
+--- PASS: TestLoginCSRF (0.39s)
+=== RUN   TestInvalidCredentials
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:07+08:00" level=info msg="Please login with the username admin and the password 415d571fb9585780"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53797 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:07+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:07 +0800] \"GET /login HTTP/1.1\" 200 1037 \"\" \"Go-http-client/1.1\""
+Extracted Token: Wp14eBnY+6HBByxFhD631kNDb8to62e8qW4fKx1GIKFDnPnDFmvNFsnNLApYMrgKAVTj7EekpymKUdpvavGkYQ==
+Copying cookie: _gorilla_csrf=MTc2NjU5OTMyN3xJa2RSUjBKMWR5dDZUbkpqU1hsblFsQXpRWGRRTTBWSldHcERZM1pVT0VOV1NYb3ZSbEpJWlROb1RVRTlJZ289fESEdoaSdFcZ5ZTFD5W8OZBHhb4TzEhZBUNq7BnrEYwV
+Copying cookie: gophish=MTc2NjU5OTMyN3xmNkhwSTB1WVlmRzdOb0NvNDVERVR2MHBLaTFqYWhiTTAxbzhVLTBhcFR2dXB2az18AylICFBo67vHkFA0xLg0ZkT8UwM6QVV1GZYnPJP9yC8=
+DEBUG: Request Host: 127.0.0.1:53797, Referer: http://127.0.0.1:53797/login, Origin: http://127.0.0.1:53797
+time="2025-12-25T02:02:07+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:07 +0800] \"POST /login HTTP/1.1\" 403 27 \"http://127.0.0.1:53797/login\" \"Go-http-client/1.1\""
+403 Forbidden Body: Forbidden - origin invalid
+
+    route_test.go:98: invalid status code received. expected 401 got 403
+--- FAIL: TestInvalidCredentials (0.37s)
+=== RUN   TestSuccessfulLogin
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:07+08:00" level=info msg="Please login with the username admin and the password 61930d6c5c6d8345"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53801 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:07+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:07 +0800] \"GET /login HTTP/1.1\" 200 1033 \"\" \"Go-http-client/1.1\""
+Extracted Token: 3ST3xNahIHF5cNYFbedTuAw6vj1hFThwYC0k7kd3RyrysyD42ldLcqBzMDYgF2vlIC7XpB1tQerDZW7fkzKRPQ==
+Copying cookie: _gorilla_csrf=MTc2NjU5OTMyN3xJa3cxWmxoUVFYb3lZWGRRV2tFcldYcFVaa0UwV0ZOM1ZXRmFiRGhsU0cxaGJ6Qm9TMDFrVWtZeGFHTTlJZ289fBeTQg9NVPEfBdjXLxlWWCAHeogeQvAPO5ixWHSZKKK5
+Copying cookie: gophish=MTc2NjU5OTMyN3w4UGJoSnQyMlhkdlhEZlhzRDdkMGZYQi1GeG5ORF9udGxsV0VnR3VOYnZZaWNjMD18xmXkRpP9OV8eUqDQlNbpj3COwJiEMP08hhUdoXaUddw=
+DEBUG: Request Host: 127.0.0.1:53801, Referer: http://127.0.0.1:53801/login, Origin: http://127.0.0.1:53801
+time="2025-12-25T02:02:07+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:07 +0800] \"POST /login HTTP/1.1\" 403 27 \"http://127.0.0.1:53801/login\" \"Go-http-client/1.1\""
+403 Forbidden Body: Forbidden - origin invalid
+
+    route_test.go:109: invalid status code received. expected 200 got 403
+--- FAIL: TestSuccessfulLogin (0.37s)
+=== RUN   TestSuccessfulRedirect
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:07+08:00" level=info msg="Please login with the username admin and the password 62ed9ade2e9134d3"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53805 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:08+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:08 +0800] \"GET /login HTTP/1.1\" 200 1032 \"\" \"Go-http-client/1.1\""
+Extracted Token: XeAq87i1Q5wGzdZACoetsLqlZ9gVY3v4y5VUH4cfK2zTymNNLtQgpjYMIePTnYYWiq3EThFoC7CNfATnU/mp4Q==
+Copying cookie: _gorilla_csrf=MTc2NjU5OTMyOHxJbXBwY0VwMmNGcG9XWHB2ZDNkbVpXb3lVbTl5Y0dwQlNXODFXVVZETTBKSlVuVnNVU3RPVkcxbmJ6QTlJZ289fDbqKRVkiyQ1lWvokuiHxArpCPyS_q1R__HIlocvlZpb
+Copying cookie: gophish=MTc2NjU5OTMyOHxnaHlfVGlUdmdOQ0VjajhIVlYtNXZOcWVZWWdtS29WWmRWanpNNkJVU2JMWkxyOD18BKMmWxrytvSlM5hD5A879-PEQaoWRyhINCStCcByvmU=
+DEBUG: Request Host: 127.0.0.1:53805, Referer: http://127.0.0.1:53805/login, Origin: http://127.0.0.1:53805
+time="2025-12-25T02:02:08+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:08 +0800] \"POST /login?next=/campaigns HTTP/1.1\" 403 27 \"http://127.0.0.1:53805/login\" \"Go-http-client/1.1\""
+403 Forbidden Body: Forbidden - origin invalid
+
+    route_test.go:125: invalid status code received. expected 302 got 403
+--- FAIL: TestSuccessfulRedirect (0.37s)
+=== RUN   TestAccountLocked
+/Users/hk/Github/gpsh/controllers
+in controllers_test.go: /Users/hk/Github/gpsh/db/db_sqlite3/migrations
+goose: migrating db environment 'production', current version: 0, target: 20220321133237
+OK    20160118194630_init.sql
+OK    20160131153104_0.1.2_add_event_details.sql
+OK    20160211211220_0.1.2_add_ignore_cert_errors.sql
+OK    20160217211342_0.1.2_create_from_col_results.sql
+OK    20160225173824_0.1.2_capture_credentials.sql
+OK    20160227180335_0.1.2_store-smtp-settings.sql
+OK    20160317214457_0.2_redirect_url.sql
+OK    20160605210903_0.2_campaign_scheduling.sql
+OK    20170104220731_0.2_result_statuses.sql
+OK    20170219122503_0.2.1_email_headers.sql
+OK    20170827141312_0.4_utc_dates.sql
+OK    20171027213457_0.4.1_maillogs.sql
+OK    20171208201932_0.4.1_next_send_date.sql
+OK    20180223101813_0.5.1_user_reporting.sql
+OK    20180524203752_0.7.0_result_last_modified.sql
+OK    20180527213648_0.7.0_store_email_request.sql
+OK    20180830215615_0.7.0_send_by_date.sql
+OK    20190105192341_0.8.0_rbac.sql
+OK    20191104103306_0.9.0_create_webhooks.sql
+OK    20200116000000_0.9.0_imap.sql
+OK    20200619000000_0.11.0_password_policy.sql
+OK    20200730000000_0.11.0_imap_ignore_cert_errors.sql
+OK    20200914000000_0.11.0_last_login.sql
+OK    20201201000000_0.11.0_account_locked.sql
+OK    20220321133237_0.4.1_envelope_sender.sql
+time="2025-12-25T02:02:08+08:00" level=info msg="Please login with the username admin and the password 340042b3dfc39940"
+DEBUG: TrustedOrigins set to: [http://127.0.0.1:53809 http://127.0.0.1 http://localhost]
+time="2025-12-25T02:02:08+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:08 +0800] \"GET /login HTTP/1.1\" 200 1039 \"\" \"Go-http-client/1.1\""
+Extracted Token: gjYOB3+gVdDtLLbCuw0ZjNSmVEWPoetD2dMaUqHRb7MGdRI01W2eVig0eJ2KPazoCecwQjBM00+/Wq5mXR+mwQ==
+Copying cookie: _gorilla_csrf=MTc2NjU5OTMyOHxJbWhGVFdOTk5uSk9lVFJpUmtkTk5XWk5WRU14V2s0eFFscEJaUzgzVkdkTldtOXRNRTVRZWs5NVdFazlJZ289fL5rILzeteWxa9GIMRSdf7HrKY7Eh1DDyIt6vER-edOa
+Copying cookie: gophish=MTc2NjU5OTMyOHxwYy1HV0tiOG9uaFYtdldzc09manVOT2VCZDN4REVjU0R0ajZ3ZE9Da3lCa2l5UT18SZe-tTZ3I1G0uri9Awvh0Bniu-HJ3ydvacgm8uYM-rA=
+DEBUG: Request Host: 127.0.0.1:53809, Referer: http://127.0.0.1:53809/login, Origin: http://127.0.0.1:53809
+time="2025-12-25T02:02:08+08:00" level=info msg="127.0.0.1 - - [25/Dec/2025:02:02:08 +0800] \"POST /login HTTP/1.1\" 403 27 \"http://127.0.0.1:53809/login\" \"Go-http-client/1.1\""
+403 Forbidden Body: Forbidden - origin invalid
+
+    route_test.go:143: invalid status code received. expected 401 got 403
+--- FAIL: TestAccountLocked (0.37s)
+FAIL
+FAIL	github.com/gophish/gophish/controllers	7.314s
+FAIL

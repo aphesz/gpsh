@@ -9,6 +9,7 @@ import (
 
 	"github.com/gophish/gophish/auth"
 	"github.com/gophish/gophish/config"
+	mid "github.com/gophish/gophish/middleware"
 	"github.com/gophish/gophish/models"
 )
 
@@ -37,6 +38,9 @@ func setupTest(t *testing.T) *testContext {
 	}
 	ctx := &testContext{}
 	ctx.config = conf
+	ctx.config.AdminConf.TrustedOrigins = []string{}
+	// Exempt /login from CSRF checks in tests
+	mid.CSRFExemptPrefixes = append(mid.CSRFExemptPrefixes, "/login")
 	ctx.adminServer = httptest.NewUnstartedServer(NewAdminServer(ctx.config.AdminConf).server.Handler)
 	ctx.adminServer.Config.Addr = ctx.config.AdminConf.ListenURL
 	ctx.adminServer.Start()
